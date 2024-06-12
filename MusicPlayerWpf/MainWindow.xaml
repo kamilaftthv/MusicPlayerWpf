@@ -73,7 +73,7 @@
                     <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-            <Image Grid.Column="1" x:Name="AlbumCoverImage" Stretch="UniformToFill">
+            <Image Grid.Column="1" x:Name="AlbumCoverImage">
                 <Image.Source>
                     <Binding Path="SelectedItem.AlbumCover" ElementName="FilesDG"/>
                 </Image.Source>
@@ -99,14 +99,15 @@
                 <Button Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipNext" />
                 </Button>
+                
             </StackPanel>
             <Label x:Name="TrackInfo" Content="Artist - Title" HorizontalAlignment="Center" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <materialDesign:PackIcon Kind="VolumeHigh" VerticalAlignment="Center" />
-                <Slider x:Name="VolumeSlider" Maximum="100" Minimum="0" Value="{Binding Volume, Mode=TwoWay}" Width="100"
-        Thumb.DragStarted="VolumeSlider_DragStarted"
-        Thumb.DragCompleted="VolumeSlider_DragCompleted"
-        ValueChanged="VolumeSlider_ValueChanged" />
+                <Slider x:Name="VolumeSlider" Maximum="100" Minimum="0" Value="{Binding Volume, Mode=TwoWay}" Width="100" 
+                        Thumb.DragStarted="VolumeSlider_DragStarted"
+                        Thumb.DragCompleted="VolumeSlider_DragCompleted"
+                        ValueChanged="VolumeSlider_ValueChanged" />
             </StackPanel>
         </StackPanel>
     </Grid>

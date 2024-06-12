@@ -49,6 +49,7 @@ namespace MusicPlayerWpf
 
         private void OpenFileMI_Click(object sender, RoutedEventArgs e)
         {
+            StopCurrentTrack();
             var openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3";
             if (openFileDialog.ShowDialog() == true)
@@ -62,6 +63,7 @@ namespace MusicPlayerWpf
 
         private void OpenFolderMI_Click(object sender, RoutedEventArgs e)
         {
+            StopCurrentTrack();
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -75,6 +77,17 @@ namespace MusicPlayerWpf
                     FilesDG.Items.Refresh();
                 }
             }
+        }
+
+        private void StopCurrentTrack()
+        {
+            _player.Stop();
+            _isPlaying = false;
+            PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
+
+            FileNameLb.Content = "No song selected";
+            TrackInfo.Content = "";
+            AlbumCoverImage.Source = null;
         }
 
         private TrackInfo CreateTrackInfo(string filePath)
@@ -100,7 +113,7 @@ namespace MusicPlayerWpf
             FileNameLb.Content = $"Playing: {file.Tag.Title} by {file.Tag.FirstPerformer}";
             TrackInfo.Content = $"{file.Tag.FirstPerformer} - {file.Tag.Title}";
 
-            ExtractAlbumCover(filePath); 
+            ExtractAlbumCover(filePath);
 
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
@@ -217,6 +230,10 @@ namespace MusicPlayerWpf
             _player.Stop();
             _isPlaying = false;
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
+
+            FileNameLb.Content = "No song selected";
+            TrackInfo.Content = "";
+            AlbumCoverImage.Source = null;
         }
 
         private void Previous_Click(object sender, RoutedEventArgs e)
