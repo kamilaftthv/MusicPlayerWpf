@@ -2,20 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 using TagLib;
 
 namespace MusicPlayerWpf
@@ -36,7 +27,7 @@ namespace MusicPlayerWpf
 
         private void OpenFileMI_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            var openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3";
             if (openFileDialog.ShowDialog() == true)
             {
@@ -44,12 +35,13 @@ namespace MusicPlayerWpf
                 var track = CreateTrackInfo(filePath);
                 FilesInFolders.Add(track);
                 FilesDG.Items.Refresh();
+                PlayFile(filePath);
             }
         }
 
         private void OpenFolderMI_Click(object sender, RoutedEventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog())
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -83,9 +75,42 @@ namespace MusicPlayerWpf
             _isPlaying = true;
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Pause;
 
-            var file = TagLib.File.Create(filePath);
-            FileNameLb.Content = $"Playing: {file.Tag.Title} by {file.Tag.FirstPerformer}";
-            TrackInfo.Content = $"{file.Tag.FirstPerformer} - {file.Tag.Title}";
+            _player.MediaOpened += Player_MediaOpened;
+            _player.MediaEnded += Player_MediaEnded;
+        }
+
+        private void Player_MediaOpened(object sender, EventArgs e)
+        {
+            TrackSlider.Maximum = _player.NaturalDuration.TimeSpan.TotalSeconds;
+            CompositionTarget.Rendering += UpdateSliderPosition;
+        }
+
+        private void Player_MediaEnded(object sender, EventArgs e)
+        {
+            _isPlaying = false;
+            PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
+            TrackSlider.Value = 0;
+            CompositionTarget.Rendering -= UpdateSliderPosition;
+        }
+
+        private void UpdateSliderPosition(object sender, EventArgs e)
+        {
+            TrackSlider.Value = _player.Position.TotalSeconds;
+        }
+
+        private void TrackSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _player.Position = TimeSpan.FromSeconds(TrackSlider.Value);
+        }
+
+        private void TrackSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            _player.Pause();
+        }
+
+        private void TrackSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            _player.Play();
         }
 
         private void PlayPause_Click(object sender, RoutedEventArgs e)
@@ -113,12 +138,12 @@ namespace MusicPlayerWpf
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            
+            // Логика для предыдущего трека
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            
+            // Логика для следующего трека
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
@@ -157,6 +182,8 @@ namespace MusicPlayerWpf
                 PlayFile(selectedTrack.FilePath);
             }
         }
+
+
     }
 
     public class TrackInfo
