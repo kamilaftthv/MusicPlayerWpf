@@ -1,21 +1,37 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using TagLib;
 
 namespace MusicPlayerWpf
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private MediaPlayer _player;
         private bool _isPlaying = false;
+        private double _volume = 50;
+        private int _currentTrackIndex = -1;
+
         public List<TrackInfo> FilesInFolders { get; set; }
+
+        public double Volume
+        {
+            get { return _volume; }
+            set
+            {
+                _volume = value;
+                OnPropertyChanged(nameof(Volume));
+                if (_player != null)
+                    _player.Volume = Volume / 100.0;
+            }
+        }
 
         public MainWindow()
         {
@@ -23,6 +39,12 @@ namespace MusicPlayerWpf
             _player = new MediaPlayer();
             FilesInFolders = new List<TrackInfo>();
             DataContext = this;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OpenFileMI_Click(object sender, RoutedEventArgs e)
@@ -35,7 +57,6 @@ namespace MusicPlayerWpf
                 var track = CreateTrackInfo(filePath);
                 FilesInFolders.Add(track);
                 FilesDG.Items.Refresh();
-                PlayFile(filePath);
             }
         }
 
@@ -75,14 +96,63 @@ namespace MusicPlayerWpf
             _isPlaying = true;
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Pause;
 
+            var file = TagLib.File.Create(filePath);
+            FileNameLb.Content = $"Playing: {file.Tag.Title} by {file.Tag.FirstPerformer}";
+            TrackInfo.Content = $"{file.Tag.FirstPerformer} - {file.Tag.Title}";
+
+            ExtractAlbumCover(filePath); 
+
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
+
+            var track = FilesInFolders.Find(t => t.FilePath == filePath);
+            if (track != null)
+            {
+                AlbumCoverImage.Source = track.AlbumCover;
+            }
+        }
+
+        private void ExtractAlbumCover(string filePath)
+        {
+            try
+            {
+                TagLib.File file = TagLib.File.Create(filePath);
+                var tag = file.Tag;
+
+                if (tag.Pictures.Length >= 1)
+                {
+                    var bin = tag.Pictures[0].Data.Data;
+                    var bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = new MemoryStream(bin);
+                    bitmap.EndInit();
+
+                    foreach (var item in FilesInFolders)
+                    {
+                        if (item.FilePath == filePath)
+                        {
+                            item.AlbumCover = bitmap;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private void Player_MediaOpened(object sender, EventArgs e)
         {
             TrackSlider.Maximum = _player.NaturalDuration.TimeSpan.TotalSeconds;
             CompositionTarget.Rendering += UpdateSliderPosition;
+
+            if (_currentTrackIndex >= 0 && _currentTrackIndex < FilesInFolders.Count)
+            {
+                var filePath = FilesInFolders[_currentTrackIndex].FilePath;
+                ExtractAlbumCover(filePath);
+            }
         }
 
         private void Player_MediaEnded(object sender, EventArgs e)
@@ -113,6 +183,19 @@ namespace MusicPlayerWpf
             _player.Play();
         }
 
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _player.Volume = Volume / 100.0;
+        }
+
+        private void VolumeSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+        }
+
+        private void VolumeSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+        }
+
         private void PlayPause_Click(object sender, RoutedEventArgs e)
         {
             if (_isPlaying)
@@ -138,12 +221,20 @@ namespace MusicPlayerWpf
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            // Логика для предыдущего трека
+            if (_currentTrackIndex > 0 && FilesInFolders.Count > 0)
+            {
+                _currentTrackIndex--;
+                PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
+            }
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            // Логика для следующего трека
+            if (_currentTrackIndex < FilesInFolders.Count - 1 && FilesInFolders.Count > 0)
+            {
+                _currentTrackIndex++;
+                PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
+            }
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
@@ -179,18 +270,25 @@ namespace MusicPlayerWpf
             var selectedTrack = FilesDG.SelectedItem as TrackInfo;
             if (selectedTrack != null)
             {
+                _currentTrackIndex = FilesInFolders.IndexOf(selectedTrack);
                 PlayFile(selectedTrack.FilePath);
             }
         }
-
-
     }
-
     public class TrackInfo
     {
         public string FilePath { get; set; }
         public string Name { get; set; }
         public string Artist { get; set; }
         public string Duration { get; set; }
+        public BitmapImage AlbumCover { get; set; } 
+        public TrackInfo()
+        {
+            FilePath = string.Empty;
+            Name = string.Empty;
+            Artist = string.Empty;
+            Duration = string.Empty;
+            AlbumCover = null;
+        }
     }
 }
