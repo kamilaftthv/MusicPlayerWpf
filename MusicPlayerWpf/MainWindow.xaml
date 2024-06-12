@@ -81,7 +81,13 @@
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <DataGrid x:Name="FilesDG" AutoGenerateColumns="True" ItemsSource="{Binding FilesInFolders}" />
+            <DataGrid x:Name="FilesDG" AutoGenerateColumns="False" ItemsSource="{Binding FilesInFolders}" SelectionChanged="FilesDG_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Artict" Binding="{Binding Artist}" Width="*" />
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
             <Image Grid.Column="1"/>
         </Grid>
 
@@ -110,4 +116,3 @@
         </StackPanel>
     </Grid>
 </Window>
-

@@ -24,13 +24,13 @@ namespace MusicPlayerWpf
     {
         private MediaPlayer _player;
         private bool _isPlaying = false;
-        public List<FileInfo> FilesInFolders { get; set; }
+        public List<TrackInfo> FilesInFolders { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             _player = new MediaPlayer();
-            FilesInFolders = new List<FileInfo>();
+            FilesInFolders = new List<TrackInfo>();
             DataContext = this;
         }
 
@@ -40,7 +40,10 @@ namespace MusicPlayerWpf
             openFileDialog.Filter = "MP3 files (*.mp3)|*.mp3";
             if (openFileDialog.ShowDialog() == true)
             {
-                PlayFile(openFileDialog.FileName);
+                var filePath = openFileDialog.FileName;
+                var track = CreateTrackInfo(filePath);
+                FilesInFolders.Add(track);
+                FilesDG.Items.Refresh();
             }
         }
 
@@ -53,11 +56,24 @@ namespace MusicPlayerWpf
                     var files = Directory.GetFiles(dialog.SelectedPath, "*.mp3");
                     foreach (var file in files)
                     {
-                        FilesInFolders.Add(new FileInfo(file));
+                        var track = CreateTrackInfo(file);
+                        FilesInFolders.Add(track);
                     }
                     FilesDG.Items.Refresh();
                 }
             }
+        }
+
+        private TrackInfo CreateTrackInfo(string filePath)
+        {
+            var file = TagLib.File.Create(filePath);
+            return new TrackInfo
+            {
+                FilePath = filePath,
+                Name = file.Tag.Title,
+                Artist = file.Tag.FirstPerformer,
+                Duration = file.Properties.Duration.ToString(@"mm\:ss")
+            };
         }
 
         private void PlayFile(string filePath)
@@ -97,12 +113,12 @@ namespace MusicPlayerWpf
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            // Logic for previous track
+            
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            // Logic for next track
+            
         }
 
         private void Minimize_Click(object sender, RoutedEventArgs e)
@@ -132,5 +148,22 @@ namespace MusicPlayerWpf
         {
             e.CanExecute = true;
         }
+
+        private void FilesDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedTrack = FilesDG.SelectedItem as TrackInfo;
+            if (selectedTrack != null)
+            {
+                PlayFile(selectedTrack.FilePath);
+            }
+        }
+    }
+
+    public class TrackInfo
+    {
+        public string FilePath { get; set; }
+        public string Name { get; set; }
+        public string Artist { get; set; }
+        public string Duration { get; set; }
     }
 }
