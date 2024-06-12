@@ -1,0 +1,113 @@
+﻿<Window
+    x:Class="MusicPlayerWpf.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MusicPlayerWpf"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Music Player"
+    Width="800"
+    Height="600"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.CommandBindings>
+        <CommandBinding
+            Command="ApplicationCommands.Close"
+            Executed="CloseCommand_Executed"
+            CanExecute="CloseCommand_CanExecute" />
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="E"
+            Command="ApplicationCommands.Close"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="X"
+            Command="ApplicationCommands.Cut"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="C"
+            Command="ApplicationCommands.Copy"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="V"
+            Command="ApplicationCommands.Paste"
+            Modifiers="Ctrl" />
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="WhiteSmoke">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Menu VerticalAlignment="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="Open" Click="OpenFileMI_Click" />
+                    <MenuItem Header="Open Folder" Click="OpenFolderMI_Click" />
+                    <Separator />
+                    <MenuItem Header="Copy Song" />
+                    <MenuItem Header="Save Playlist" />
+                    <Separator />
+                    <MenuItem Header="Exit" Command="ApplicationCommands.Close" InputGestureText="Ctrl+E" />
+                </MenuItem>
+                <MenuItem Header="_Edit">
+                    <MenuItem Command="ApplicationCommands.Cut" Header="Cut" InputGestureText="Ctrl+X" />
+                    <MenuItem Command="ApplicationCommands.Copy" Header="Copy" InputGestureText="Ctrl+C" />
+                    <MenuItem Command="ApplicationCommands.Paste" Header="Paste" InputGestureText="Ctrl+V" />
+                </MenuItem>
+            </Menu>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
+                <Button Click="Minimize_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="WindowMinimize" />
+                </Button>
+                <Button Click="Maximize_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="WindowMaximize" />
+                </Button>
+                <Button Click="Close_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="Close" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DataGrid x:Name="FilesDG" AutoGenerateColumns="True" ItemsSource="{Binding FilesInFolders}" />
+            <Image Grid.Column="1"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Vertical" Background="WhiteSmoke" >
+            <Label x:Name="FileNameLb" Content="No song selected" FontWeight="Bold" FontSize="16" />
+            <Slider x:Name="TrackSlider" Maximum="100" Minimum="0" Value="0" Margin="0,5,0,5" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Click="Previous_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="SkipPrevious" />
+                </Button>
+                <Button Click="PlayPause_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon x:Name="PlayPauseIcon" Kind="Play" />
+                </Button>
+                <Button Click="Stop_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="Stop" />
+                </Button>
+                <Button Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="SkipNext" />
+                </Button>
+            </StackPanel>
+            <Label x:Name="TrackInfo" Content="Artist - Title" HorizontalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <materialDesign:PackIcon Kind="VolumeHigh" VerticalAlignment="Center" />
+                <Slider x:Name="VolumeSlider" Maximum="100" Minimum="0" Value="50" Width="100" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
+
