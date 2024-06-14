@@ -32,6 +32,10 @@
         <KeyBinding Key="X" Command="ApplicationCommands.Cut" Modifiers="Ctrl" />
         <KeyBinding Key="C" Command="ApplicationCommands.Copy" Modifiers="Ctrl" />
         <KeyBinding Key="V" Command="ApplicationCommands.Paste" Modifiers="Ctrl" />
+        <KeyBinding Key="S" Command="{x:Static local:MainWindow.PreviousTrackCommand}" Modifiers="Ctrl" />
+        <KeyBinding Key="D" Command="{x:Static local:MainWindow.PlayPauseTrackCommand}" Modifiers="Ctrl" />
+        <KeyBinding Key="F" Command="{x:Static local:MainWindow.NextTrackCommand}" Modifiers="Ctrl" />
+        <KeyBinding Key="G" Command="{x:Static local:MainWindow.StopTrackCommand}" Modifiers="Ctrl" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -110,16 +114,16 @@
                     Thumb.DragCompleted="TrackSlider_DragCompleted"
                     ValueChanged="TrackSlider_ValueChanged" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Click="Previous_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                <Button x:Name="PreviousBtn" Click="Previous_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipPrevious" />
                 </Button>
-                <Button Click="PlayPause_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                <Button x:Name="PlayPauseBtn" Click="PlayPause_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon x:Name="PlayPauseIcon" Kind="Play" />
                 </Button>
-                <Button Click="Stop_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                <Button x:Name="StopBtn" Click="Stop_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="Stop" />
                 </Button>
-                <Button Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                <Button x:Name="NextBtn" Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipNext" />
                 </Button>
 

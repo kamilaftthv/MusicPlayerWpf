@@ -14,6 +14,11 @@ namespace MusicPlayerWpf
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public static RoutedCommand PreviousTrackCommand = new RoutedCommand();
+        public static RoutedCommand StopTrackCommand = new RoutedCommand();
+        public static RoutedCommand NextTrackCommand = new RoutedCommand();
+        public static RoutedCommand PlayPauseTrackCommand = new RoutedCommand();
+
         private MediaPlayer _player;
         private bool _isPlaying = false;
         private double _volume = 50;
@@ -43,6 +48,11 @@ namespace MusicPlayerWpf
             DataContext = this;
             LoadCustomCursors();
             this.Cursor = _normalCursor;
+
+            CommandBindings.Add(new CommandBinding(PreviousTrackCommand, Previous_Click));
+            CommandBindings.Add(new CommandBinding(StopTrackCommand, Stop_Click));
+            CommandBindings.Add(new CommandBinding(NextTrackCommand, Next_Click));
+            CommandBindings.Add(new CommandBinding(PlayPauseTrackCommand, PlayPause_Click));
         }
 
         private void LoadCustomCursors()
