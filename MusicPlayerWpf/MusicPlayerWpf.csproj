@@ -114,6 +114,15 @@
     <Resource Include="Resources\ClickedCursor.cur" />
     <Resource Include="Resources\NormalCursor.cur" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\jigglypuff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\jigglypufflogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\jigglypuffff.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.5.0.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.5.0.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

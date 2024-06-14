@@ -115,7 +115,8 @@ namespace MusicPlayerWpf
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
 
             FileNameLb.Content = "No song selected";
-            TrackInfo.Content = "";
+            TrackTitle.Content = "Title";
+            TrackArtist.Content = "Artist";
             AlbumCoverImage.Source = null;
         }
 
@@ -140,7 +141,8 @@ namespace MusicPlayerWpf
 
             var file = TagLib.File.Create(filePath);
             FileNameLb.Content = $"Playing: {file.Tag.Title} by {file.Tag.FirstPerformer}";
-            TrackInfo.Content = $"{file.Tag.FirstPerformer} - {file.Tag.Title}";
+            TrackTitle.Content = file.Tag.Title;
+            TrackArtist.Content = file.Tag.FirstPerformer;
 
             ExtractAlbumCover(filePath);
 
@@ -179,10 +181,7 @@ namespace MusicPlayerWpf
                     }
                 }
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex) { }
         }
 
         private void Player_MediaOpened(object sender, EventArgs e)
@@ -261,7 +260,8 @@ namespace MusicPlayerWpf
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
 
             FileNameLb.Content = "No song selected";
-            TrackInfo.Content = "";
+            TrackTitle.Content = "Title";
+            TrackArtist.Content = "Artist";
             AlbumCoverImage.Source = null;
         }
 
