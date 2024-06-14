@@ -18,6 +18,8 @@ namespace MusicPlayerWpf
         private bool _isPlaying = false;
         private double _volume = 50;
         private int _currentTrackIndex = -1;
+        private Cursor _normalCursor;
+        private Cursor _clickedCursor;
 
         public List<TrackInfo> FilesInFolders { get; set; }
 
@@ -39,6 +41,33 @@ namespace MusicPlayerWpf
             _player = new MediaPlayer();
             FilesInFolders = new List<TrackInfo>();
             DataContext = this;
+            LoadCustomCursors();
+            this.Cursor = _normalCursor;
+        }
+
+        private void LoadCustomCursors()
+        {
+            _normalCursor = LoadCursor("Resources/NormalCursor.cur");
+            _clickedCursor = LoadCursor("Resources/ClickedCursor.cur");
+        }
+
+        private Cursor LoadCursor(string filePath)
+        {
+            try
+            {
+                var cursorStream = Application.GetResourceStream(new Uri(filePath, UriKind.Relative)).Stream;
+                return new Cursor(cursorStream);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading cursor: {ex.Message}");
+                return Cursors.Arrow;
+            }
+        }
+
+        private void ChangeCursor(Cursor cursor)
+        {
+            this.Cursor = cursor;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -152,7 +181,7 @@ namespace MusicPlayerWpf
             }
             catch (Exception ex)
             {
-                
+
             }
         }
 
@@ -291,14 +320,25 @@ namespace MusicPlayerWpf
                 PlayFile(selectedTrack.FilePath);
             }
         }
+
+        private void AnyElement_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ChangeCursor(_clickedCursor);
+        }
+
+        private void AnyElement_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ChangeCursor(_normalCursor);
+        }
     }
+
     public class TrackInfo
     {
         public string FilePath { get; set; }
         public string Name { get; set; }
         public string Artist { get; set; }
         public string Duration { get; set; }
-        public BitmapImage AlbumCover { get; set; } 
+        public BitmapImage AlbumCover { get; set; }
         public TrackInfo()
         {
             FilePath = string.Empty;

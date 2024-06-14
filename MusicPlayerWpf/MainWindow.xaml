@@ -7,7 +7,9 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Music Player" Width="800" Height="600" WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    MouseDown="AnyElement_MouseDown"
+        MouseUp="AnyElement_MouseUp">
     <Window.CommandBindings>
         <CommandBinding
             Command="ApplicationCommands.Close"
@@ -99,7 +101,7 @@
                 <Button Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipNext" />
                 </Button>
-                
+
             </StackPanel>
             <Label x:Name="TrackInfo" Content="Artist - Title" HorizontalAlignment="Center" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -112,4 +114,3 @@
         </StackPanel>
     </Grid>
 </Window>
-
