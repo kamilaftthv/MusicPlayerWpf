@@ -103,6 +103,7 @@ namespace MusicPlayerWpf
         private void OpenFolderMI_Click(object sender, RoutedEventArgs e)
         {
             StopCurrentTrack();
+            ClearTrackList();
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -116,6 +117,12 @@ namespace MusicPlayerWpf
                     FilesDG.Items.Refresh();
                 }
             }
+        }
+
+        private void ClearTrackList()
+        {
+            FilesInFolders.Clear();
+            FilesDG.Items.Refresh();
         }
 
         private void StopCurrentTrack()
@@ -293,6 +300,12 @@ namespace MusicPlayerWpf
             }
         }
 
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
@@ -328,6 +341,41 @@ namespace MusicPlayerWpf
             {
                 _currentTrackIndex = FilesInFolders.IndexOf(selectedTrack);
                 PlayFile(selectedTrack.FilePath);
+            }
+        }
+
+        private void DeleteTrack_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            if (button != null)
+            {
+                DataGridRow row = DataGridRow.GetRowContainingElement(button);
+                if (row != null)
+                {
+                    TrackInfo track = row.Item as TrackInfo;
+                    if (track != null)
+                    {
+                        FilesInFolders.Remove(track);
+                        FilesDG.Items.Refresh();
+                        if (_currentTrackIndex >= 0 && _currentTrackIndex < FilesInFolders.Count && FilesInFolders[_currentTrackIndex] == track)
+                        {
+                            StopCurrentTrack();
+                            _currentTrackIndex = -1;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static class DataGridRowHelper
+        {
+            public static DataGridRow GetRowContainingElement(FrameworkElement element)
+            {
+                while (element != null && !(element is DataGridRow))
+                {
+                    element = VisualTreeHelper.GetParent(element) as FrameworkElement;
+                }
+                return element as DataGridRow;
             }
         }
 

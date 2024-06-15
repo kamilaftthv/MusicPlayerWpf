@@ -11,7 +11,8 @@
     WindowStyle="None"
     MouseDown="AnyElement_MouseDown"
     MouseUp="AnyElement_MouseUp"
-    Icon="/Resources/jigglypuff.ico">
+    Icon="/Resources/jigglypuff.ico"
+    AllowsTransparency="True">
     <Window.Background>
         <RadialGradientBrush>
             <GradientStop Color="#FF511E97"/>
@@ -34,10 +35,10 @@
         <KeyBinding Key="V" Command="ApplicationCommands.Paste" Modifiers="Ctrl" />
         <KeyBinding Key="S" Command="{x:Static local:MainWindow.PreviousTrackCommand}" Modifiers="Ctrl" />
         <KeyBinding Key="D" Command="{x:Static local:MainWindow.PlayPauseTrackCommand}" Modifiers="Ctrl" />
-        <KeyBinding Key="F" Command="{x:Static local:MainWindow.NextTrackCommand}" Modifiers="Ctrl" />
-        <KeyBinding Key="G" Command="{x:Static local:MainWindow.StopTrackCommand}" Modifiers="Ctrl" />
+        <KeyBinding Key="F" Command="{x:Static local:MainWindow.StopTrackCommand}" Modifiers="Ctrl" />
+        <KeyBinding Key="G" Command="{x:Static local:MainWindow.NextTrackCommand}" Modifiers="Ctrl" />
     </Window.InputBindings>
-    <Grid>
+    <Grid MouseDown="Window_MouseDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -50,7 +51,11 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Menu VerticalAlignment="Top">
-                <Image Source="/Resources/jigglypufflogo.png"></Image>
+                <Image Source="/Resources/jigglypufflogo.png" Width="48" Stretch="UniformToFill" Margin="0,0,-10,0"/>
+                <StackPanel Margin="-10,0,0,0">
+                    <TextBlock Text="Music" FontFamily="Elephant"></TextBlock>
+                    <TextBlock Text="Player" FontFamily="Elephant"></TextBlock>
+                </StackPanel>
                 <MenuItem Header="_File">
                     <MenuItem Header="Open" Click="OpenFileMI_Click" Icon="{materialDesign:PackIcon Kind=File}"/>
                     <MenuItem Header="Open Folder" Click="OpenFolderMI_Click" Icon="{materialDesign:PackIcon Kind=Folder}"/>
@@ -88,6 +93,13 @@
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
                     <DataGridTextColumn Header="Artist" Binding="{Binding Artist}" Width="*" />
                     <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="*" />
+                    <DataGridTemplateColumn Header="Actions" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="{materialDesign:PackIcon Kind=Delete}" Click="DeleteTrack_Click"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Grid Grid.Column="1" Width="235" Height="300" Background="WhiteSmoke">
@@ -96,19 +108,19 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="TrackTitle" Content="Title" HorizontalAlignment="Center" FontSize="16" Margin="5"/>
+                <Label x:Name="TrackTitle" Content="Title" HorizontalAlignment="Center" FontSize="16" Margin="5" FontFamily="Elephant"/>
                 <Image Width="200" Height="200" Source="/Resources/jigglypuffff.png" Stretch="UniformToFill"/>
                 <Image x:Name="AlbumCoverImage" Width="200" Height="200" VerticalAlignment="Center">
                     <Image.Source>
                         <Binding Path="SelectedItem.AlbumCover" ElementName="FilesDG"/>
                     </Image.Source>
                 </Image>
-                <Label x:Name="TrackArtist" Content="Artist" HorizontalAlignment="Center" FontSize="16" Margin="5,260,5,5"/>
+                <Label x:Name="TrackArtist" Content="Artist" HorizontalAlignment="Center" FontSize="16" Margin="5,260,5,5" FontFamily="Elephant"/>
             </Grid>
         </Grid>
 
         <StackPanel Grid.Row="2" Orientation="Vertical" Background="WhiteSmoke">
-            <Label x:Name="FileNameLb" Content="No song selected" FontWeight="Bold" FontSize="16" />
+            <Label x:Name="FileNameLb" Content="No song selected" FontWeight="Bold" FontSize="16" FontFamily="Elephant" />
             <Slider x:Name="TrackSlider" Maximum="100" Minimum="0" Value="0" Margin="0,5,0,5"
                     Thumb.DragStarted="TrackSlider_DragStarted"
                     Thumb.DragCompleted="TrackSlider_DragCompleted"
