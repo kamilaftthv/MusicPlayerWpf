@@ -69,6 +69,12 @@
                     <MenuItem Command="ApplicationCommands.Copy" Header="Copy" InputGestureText="Ctrl+C" Icon="{materialDesign:PackIcon Kind=ContentCopy}"/>
                     <MenuItem Command="ApplicationCommands.Paste" Header="Paste" InputGestureText="Ctrl+V" Icon="{materialDesign:PackIcon Kind=ContentPaste}" />
                 </MenuItem>
+                <MenuItem Header="Piano">
+                    <MenuItem
+                        Click="MenuItem_Click_1"
+                        Header="Open piano"
+                        Icon="{materialDesign:PackIcon Kind=Piano}" />
+                </MenuItem>
             </Menu>
             <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center">
                 <Button Click="Minimize_Click" Style="{StaticResource MaterialDesignFlatButton}">
@@ -116,6 +122,9 @@
                     </Image.Source>
                 </Image>
                 <Label x:Name="TrackArtist" Content="Artist" HorizontalAlignment="Center" FontSize="16" Margin="5,260,5,5" FontFamily="Elephant"/>
+                <Border BorderBrush="#FF673AB7" BorderThickness="5" OpacityMask="#FF673AB7" Height="300">
+                    <Border BorderBrush="#FF673AB7" BorderThickness="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200"/>
+                </Border>
             </Grid>
         </Grid>
 

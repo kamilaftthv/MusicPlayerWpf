@@ -388,5 +388,9 @@ namespace MusicPlayerWpf
         {
             ChangeCursor(_normalCursor);
         }
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            new PianoWindow().Show();
+        }
     }
 }
