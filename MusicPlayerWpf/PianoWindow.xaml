@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:MusicPlayerWpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="PianoWindow" Height="350" Width="600">
+        Title="PianoWindow" Height="350" Width="600"
+         KeyDown="Window_KeyDown"
+        Focusable="True"
+        FocusManager.FocusedElement="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -28,13 +31,13 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Height="auto" Click="Button_Click"/>
-            <Button Grid.Column="1" Height="auto" Background="White" Click="Button_Click_1"/>
-            <Button Grid.Column="2" Height="auto" Click="Button_Click_2"/>
-            <Button Grid.Column="3" Height="auto" Background="White" Click="Button_Click_3"/>
-            <Button Grid.Column="4" Height="auto" Click="Button_Click_4"/>
-            <Button Grid.Column="5" Height="auto" Background="White" Click="Button_Click_5"/>
-            <Button Grid.Column="6" Height="auto" Click="Button_Click_6" Cursor="Hand"/>
+            <Button x:Name="ButtonC" Grid.Column="0" Height="auto" Click="Button_Click"/>
+            <Button x:Name="ButtonD" Grid.Column="1" Height="auto" Background="White" Click="Button_Click_1"/>
+            <Button x:Name="ButtonE" Grid.Column="2" Height="auto" Click="Button_Click_2"/>
+            <Button x:Name="ButtonF" Grid.Column="3" Height="auto" Background="White" Click="Button_Click_3"/>
+            <Button x:Name="ButtonG" Grid.Column="4" Height="auto" Click="Button_Click_4"/>
+            <Button x:Name="ButtonA" Grid.Column="5" Height="auto" Background="White" Click="Button_Click_5"/>
+            <Button x:Name="ButtonB" Grid.Column="6" Height="auto" Click="Button_Click_6" Cursor="Hand"/>
         </Grid>
     </Grid>
 </Window>
