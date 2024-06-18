@@ -135,6 +135,9 @@
                     Thumb.DragCompleted="TrackSlider_DragCompleted"
                     ValueChanged="TrackSlider_ValueChanged" />
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="OrderBtn" Click="Order_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="PlaylistPlay" />
+                </Button>
                 <Button x:Name="PreviousBtn" Click="Previous_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipPrevious" />
                 </Button>
@@ -146,6 +149,9 @@
                 </Button>
                 <Button x:Name="NextBtn" Click="Next_Click" Style="{StaticResource MaterialDesignFlatButton}">
                     <materialDesign:PackIcon Kind="SkipNext" />
+                </Button>
+                <Button x:Name="ShuffleBtn" Click="Shuffle_Click" Style="{StaticResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="ShuffleVariant" />
                 </Button>
 
             </StackPanel>

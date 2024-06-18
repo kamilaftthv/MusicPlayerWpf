@@ -28,6 +28,9 @@ namespace MusicPlayerWpf
 
         public List<TrackInfo> FilesInFolders { get; set; }
 
+        private Random _random = new Random();
+        private bool _isShuffle = false;
+
         public double Volume
         {
             get { return _volume; }
@@ -219,6 +222,7 @@ namespace MusicPlayerWpf
             PlayPauseIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.Play;
             TrackSlider.Value = 0;
             CompositionTarget.Rendering -= UpdateSliderPosition;
+            PlayNextTrack();
         }
 
         private void UpdateSliderPosition(object sender, EventArgs e)
@@ -284,19 +288,17 @@ namespace MusicPlayerWpf
 
         private void Previous_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentTrackIndex > 0 && FilesInFolders.Count > 0)
+            if (FilesInFolders.Count > 0)
             {
-                _currentTrackIndex--;
-                PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
+                PlayPreviousTrack();
             }
         }
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentTrackIndex < FilesInFolders.Count - 1 && FilesInFolders.Count > 0)
+            if (FilesInFolders.Count > 0)
             {
-                _currentTrackIndex++;
-                PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
+                PlayNextTrack();
             }
         }
 
@@ -391,6 +393,54 @@ namespace MusicPlayerWpf
         private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
             new PianoWindow().Show();
+        }
+
+        private void Shuffle_Click(object sender, RoutedEventArgs e)
+        {
+            _isShuffle = true;
+            MessageBox.Show("Shuffle mode activated");
+        }
+
+        private void Order_Click(object sender, RoutedEventArgs e)
+        {
+            _isShuffle = false;
+            MessageBox.Show("Play in order mode activated");
+        }
+
+        private void PlayNextTrack()
+        {
+            if (_isShuffle)
+            {
+                _currentTrackIndex = _random.Next(FilesInFolders.Count);
+            }
+            else
+            {
+                _currentTrackIndex++;
+                if (_currentTrackIndex >= FilesInFolders.Count)
+                {
+                    _currentTrackIndex = 0;
+                }
+            }
+
+            PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
+        }
+
+        private void PlayPreviousTrack()
+        {
+            if (_isShuffle)
+            {
+                _currentTrackIndex = _random.Next(FilesInFolders.Count);
+            }
+            else
+            {
+                _currentTrackIndex--;
+                if (_currentTrackIndex < 0)
+                {
+                    _currentTrackIndex = FilesInFolders.Count - 1;
+                }
+            }
+
+            PlayFile(FilesInFolders[_currentTrackIndex].FilePath);
         }
     }
 }
